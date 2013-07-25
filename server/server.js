@@ -87,7 +87,7 @@ if (Meteor.isServer) {
     Drafters.remove({});
     Meteor.users.find({}).forEach(function(user) {
       Drafters.insert({
-        name: user.profile.name,
+        username: user.profile.name,
         draftOrder: user.profile.draftOrder,
         id: user._id,
         avatar: user.profile.avatar

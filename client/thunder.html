@@ -8,9 +8,7 @@
 <body>
   {{loginButtons align="right"}}
   <div class="container">
-    <div class="row-fluid announce">
-      {{> announce}}
-    </div>
+    {{> announce}}
     <div class="row-fluid">
       <div class="span3 logo">
         <img src="texans.jpg"></img>
@@ -34,10 +32,10 @@
       <div class="span2" id="date">
         {{month}} / {{day}}
       </div>
-      <div class="span2" id="time">
+      <div class="span3" id="time">
         {{time}}
       </div>
-      <div class="span7 opponent">
+      <div class="span6 opponent">
         {{game}}
       </div>
     </div>
@@ -49,18 +47,24 @@
   {{> drafting}}
   <ol>
     {{#each drafters}}
-      <li {{#if isDrafting}}class="drafting"{{/if}}>{{name}} <img src="{{avatar}}" class="avatar-small"></img></li>
+      <li {{#if isDrafting}}class="drafting"{{/if}}>{{username}} <img src="{{avatar}}" class="avatar-small"></img></li>
     {{/each}}
   </ol>
 </template>
 
 <template name="drafting">
+  {{#if next}}
   <div class="alert alert-error">
     <strong>{{username}}</strong> is next on the board.
   </div>
+  {{/if}}
 </template>
 
 <template name="announce">
-  <h3>{{upNext}}</h3>
-  <h6>{{lastPick}}</h6>
+  {{#if next}}
+  <div class="row-fluid announce">
+    <h3>{{upNext}}</h3>
+    <h6>{{lastPick}}</h6>
+  </div>
+  {{/if}}
 </template>

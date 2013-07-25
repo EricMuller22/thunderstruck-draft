@@ -14,9 +14,14 @@ if (Meteor.isClient) {
     }
   });
 
+  // Picks
   var currentPick = function() {
     return Picks.find({}).count() + 1;
   };
+
+  var maxPick = function() {
+    return Games.find({}).count();
+  }
 
   // Users
   Template.users.drafters = function() {
@@ -28,19 +33,35 @@ if (Meteor.isClient) {
   };
 
   var username = function() {
-    return "Bro";
+    if (Drafters.findOne({draftOrder: currentPick()})) {
+      return Drafters.findOne({draftOrder: currentPick()}).username;
+    }
+    return "";
   };
 
   Template.drafting.username = username;
 
   // Announcements
-  Template.announce.upNext = function () {
-    return "On the clock: " + username()
+  var upNext = function () {
+    var next = username();
+    if (next) {
+      return "On the board: " + next;
+    }
+    return "";
   };
+
+  Template.announce.upNext = upNext;
+
+  var next = function(){
+    return currentPick() <= maxPick()
+  }
+
+  Template.announce.next = next;
+  Template.drafting.next = next;
 
   Template.announce.lastPick = function () {
     var pick = currentPick();
-    if (pick > 1) {
+    if (pick > 1 && pick <= maxPick()) {
       return "Last pick: Dude selected Jaguars";
     }
     return "";

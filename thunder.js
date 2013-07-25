@@ -10,7 +10,8 @@ Games.allow({
 });
 
 Picks.allow({
-  insert: function() {
+  insert: function(userId) {
+    console.log(userId);
     return true;
   }
 });
