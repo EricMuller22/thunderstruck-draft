@@ -4,6 +4,7 @@
 @dark-gray: #B0B0B0;
 
 @avatar-size: 36px;
+@mobile-avatar-size: 22px;
 @border-size: 4px;
 
 .bordered {
@@ -32,11 +33,15 @@ body {
   margin-top: 1em;
 }
 
-.avatar-small {
+.rounded (@radius: @avatar-size) {
   // shape
   width: @avatar-size;
   height: @avatar-size;
   border-radius: @avatar-size / 2;
+}
+
+.avatar-small {
+  .rounded;
   // image
   background-size: @avatar-size auto;
   background-position: center top;
@@ -47,6 +52,7 @@ body {
   vertical-align: middle;
 }
 
+/* Now Drafting indicator
 .users li.drafting {
   color: @battle-red;
 }
@@ -55,6 +61,7 @@ body {
   .bordered;
   border-radius: @avatar-size + @border-size / 2;
 }
+*/
 
 .logo > img {
     border-radius: 10px;
@@ -92,5 +99,9 @@ body {
 
   .logo > img {
     display: none;
+  }
+
+  .avatar-small {
+    .rounded(@mobile-avatar-size);
   }
 }

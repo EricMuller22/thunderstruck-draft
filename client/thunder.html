@@ -14,9 +14,7 @@
         <img src="texans.jpg"></img>
       </div>
       <div class="span7 schedule">
-        <div class="row-fluid">
-          {{> games}}
-        </div>
+        {{> games}}
       </div>
       <div class="span2 users">
         {{> users}}
@@ -35,8 +33,11 @@
       <div class="span3" id="time">
         {{time}}
       </div>
-      <div class="span6 opponent">
+      <div class="span5 opponent">
         {{game}}
+      </div>
+      <div class="span2 owner">
+        {{owner}}
       </div>
     </div>
   {{/each}}

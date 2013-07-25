@@ -10,7 +10,9 @@ if (Meteor.isClient) {
 
   Template.games.events({
     'click .game' : function (evt) {
-      // console.log(Meteor.userId());
+      if (Meteor.userId() === nextUser().id) {
+        console.log("CHOOSE GAME LOL");
+      }
     }
   });
 
@@ -24,13 +26,19 @@ if (Meteor.isClient) {
   }
 
   // Users
+  var nextUser = function() {
+    return Drafters.findOne({draftOrder: currentPick()});
+  }
+
   Template.users.drafters = function() {
     return Drafters.find({}).fetch();
   };
 
+  /* For highlighting drafter in user list
   Template.users.isDrafting = function(drafter) {
     return false;
   };
+  */
 
   var username = function() {
     if (Drafters.findOne({draftOrder: currentPick()})) {
