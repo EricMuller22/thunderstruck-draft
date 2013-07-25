@@ -1,0 +1,66 @@
+<head>
+  <meta charset="utf-8">
+  <title>Thunderstruck Ticket Draft 2013</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  {{loginButtons align="right"}}
+  <div class="container">
+    <div class="row-fluid announce">
+      {{> announce}}
+    </div>
+    <div class="row-fluid">
+      <div class="span3 logo">
+        <img src="texans.jpg"></img>
+      </div>
+      <div class="span7 schedule">
+        <div class="row-fluid">
+          {{> games}}
+        </div>
+      </div>
+      <div class="span2 users">
+        {{> users}}
+      </div>
+    </div>
+  </div>
+</body>
+
+<template name="games">
+  <h4 style="text-align:center">2013 Texans Schedule</h4>
+  {{#each games}}
+    <div class="row-fluid game">
+      <div class="span2" id="date">
+        {{month}} / {{day}}
+      </div>
+      <div class="span2" id="time">
+        {{time}}
+      </div>
+      <div class="span7 opponent">
+        {{game}}
+      </div>
+    </div>
+  {{/each}}
+</template>
+
+<template name="users">
+  <h4>Draft Order</h4>
+  {{> drafting}}
+  <ol>
+    {{#each drafters}}
+      <li {{#if isDrafting}}class="drafting"{{/if}}>{{name}} <img src="{{avatar}}" class="avatar-small"></img></li>
+    {{/each}}
+  </ol>
+</template>
+
+<template name="drafting">
+  <div class="alert alert-error">
+    <strong>{{username}}</strong> is next on the board.
+  </div>
+</template>
+
+<template name="announce">
+  <h3>{{upNext}}</h3>
+  <h6>{{lastPick}}</h6>
+</template>

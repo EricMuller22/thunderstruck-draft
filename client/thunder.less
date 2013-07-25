@@ -1,0 +1,82 @@
+@battle-red: #C0392B;
+@midnight-blue: #2C3E50;
+@light-gray: #F0F0F0;
+@dark-gray: #B0B0B0;
+
+@avatar-size: 36px;
+@border-size: 4px;
+
+.bordered {
+  border: solid;
+  border-radius: @border-size;
+  border-color: @battle-red;
+}
+
+#login-buttons {
+  float: right;
+  margin-right: 20px;
+  margin-top: 16px;
+}
+
+body {
+  font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  color: @midnight-blue;
+}
+
+.container {
+  padding-bottom: 20px;
+}
+
+.users li {
+  margin-top: 1em;
+}
+
+.users li .avatar-small {
+  width: @avatar-size;
+  height: @avatar-size;
+  border-radius: @avatar-size / 2;
+}
+
+.users li.drafting {
+  color: @battle-red;
+}
+
+.users li.drafting .avatar-small {
+  .bordered;
+  border-radius: @avatar-size + @border-size / 2;
+}
+
+.logo > img {
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.announce {
+  text-align: center;
+  color: @battle-red;
+  border-radius: 10px;
+  background-color: @light-gray;
+}
+
+.announce h6 {
+  color: @midnight-blue;
+}
+
+.game {
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
+.schedule .game:nth-child(odd) {
+  background-color: @light-gray;
+}
+
+.game-select {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  #date, #time {
+    display: none;
+  }
+}
