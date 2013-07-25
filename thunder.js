@@ -11,7 +11,6 @@ Games.allow({
 
 Picks.allow({
   insert: function(userId) {
-    console.log(userId);
     return true;
   }
 });

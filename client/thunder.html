@@ -47,7 +47,7 @@
   {{> drafting}}
   <ol>
     {{#each drafters}}
-      <li {{#if isDrafting}}class="drafting"{{/if}}>{{username}} <img src="{{avatar}}" class="avatar-small"></img></li>
+      <li {{#if isDrafting}}class="drafting"{{/if}}>{{username}} <span style="background-image: url('{{avatar}}');" class="avatar-small"></span></li>
     {{/each}}
   </ol>
 </template>

@@ -32,10 +32,19 @@ body {
   margin-top: 1em;
 }
 
-.users li .avatar-small {
+.avatar-small {
+  // shape
   width: @avatar-size;
   height: @avatar-size;
   border-radius: @avatar-size / 2;
+  // image
+  background-size: @avatar-size auto;
+  background-position: center top;
+  display: inline-block;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  // position
+  vertical-align: middle;
 }
 
 .users li.drafting {
