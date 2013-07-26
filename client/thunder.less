@@ -7,10 +7,10 @@
 @mobile-avatar-size: 22px;
 @border-size: 4px;
 
-.bordered {
+.bordered (@color: @battle-red, @width: @avatar-size) {
   border: solid;
-  border-radius: @border-size;
-  border-color: @battle-red;
+  border-radius: (@width + @border-size) / 2;
+  border-color: @color;
 }
 
 #login-buttons {
@@ -42,6 +42,7 @@ body {
 
 .avatar-small {
   .rounded;
+  // .bordered(@midnight-blue, @avatar-size);
   // image
   background-size: @avatar-size auto;
   background-position: center top;
@@ -58,8 +59,7 @@ body {
 }
 
 .users li.drafting .avatar-small {
-  .bordered;
-  border-radius: @avatar-size + @border-size / 2;
+  .bordered(@battle-red, @avatar-size);
 }
 
 .users li.drafted {
@@ -67,9 +67,7 @@ body {
 }
 
 .users li.drafted .avatar-small {
-  .bordered;
-  border-color: @dark-gray;
-  border-radius: @avatar-size + @border-size / 2;
+  .bordered(@dark-gray, @avatar-size);
 }
 
 .logo > img {
