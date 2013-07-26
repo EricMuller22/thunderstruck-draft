@@ -36,9 +36,15 @@
       <div class="offset1 span4 opponent">
         {{game}}
       </div>
-      <div class="span2 owner" id="{{_id}}">
-        {{owner}}
-        <!-- button class="btn btn-danger" type="button">Select Game</button -->
+      <div class="span2 owner">
+        {{#if owner}}
+          {{owner}}
+        {{/if}}
+        {{#unless owner}}
+          {{#if canDraft}}
+            <div class="game-select" id="{{_id}}">Select</div>
+          {{/if}}
+        {{/unless}}
       </div>
     </div>
   {{/each}}
@@ -49,7 +55,7 @@
   {{> drafting}}
   <ol>
     {{#each drafters}}
-      <li {{#if isDrafting}}class="drafting"{{/if}}><span style="background-image: url('{{avatar}}');" class="avatar-small"></span> {{username}}</li>
+      <li {{ifDrafting draftOrder}}><span style="background-image: url('{{image avatar pick}}');" class="avatar-small"></span> {{username}}</li>
     {{/each}}
   </ol>
 </template>

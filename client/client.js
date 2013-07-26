@@ -8,10 +8,24 @@ if (Meteor.isClient) {
     return Games.find({}).fetch();
   };
 
+  var canDraft = function() {
+    return Meteor.userId() === nextUser().id;
+  };
+
+  Template.games.canDraft = canDraft;
+
   Template.games.events({
-    'click .game' : function (evt) {
-      if (Meteor.userId() === nextUser().id) {
-        console.log("CHOOSE GAME LOL");
+    'click .game-select' : function (evt) {
+      if (canDraft()) {
+        Games.update({_id: evt.target.id}, {$set: {owner: username()}});
+        var drafterInfo = Drafters.findOne({draftOrder: currentPick()});
+        Picks.insert({
+          "user": drafterInfo,
+          "game": Games.findOne({_id: evt.target.id}),
+          "pick": currentPick()
+        });
+        var gameInfo = Games.findOne({_id: evt.target.id});
+        Drafters.update({_id: drafterInfo._id}, {$set: {pick: gameInfo.game}});
       }
     }
   });
@@ -35,9 +49,19 @@ if (Meteor.isClient) {
   };
 
   /* To do: highlight drafter in user list - probably better accomplished with jQuery */
-  Template.users.isDrafting = function() {
-    return false;
+  Template.users.ifDrafting = function(pickNumber) {
+    if (pickNumber === currentPick()) {
+      return 'class=drafting';
+    }
+    return "";
   };
+
+  Template.users.image = function(avatar, pick) {
+    if (pick !== "") {
+      return "teams/" + pick + ".gif";
+    }
+    return avatar;
+  }
 
   var username = function() {
     if (Drafters.findOne({draftOrder: currentPick()})) {
@@ -59,9 +83,9 @@ if (Meteor.isClient) {
 
   Template.announce.upNext = upNext;
 
-  var next = function(){
+  var next = function() {
     return currentPick() <= maxPick()
-  }
+  };
 
   Template.announce.next = next;
   Template.drafting.next = next;
@@ -69,7 +93,8 @@ if (Meteor.isClient) {
   Template.announce.lastPick = function () {
     var pick = currentPick();
     if (pick > 1 && pick <= maxPick()) {
-      return "Last pick: Daniel selected Jaguars";
+      var lastPick = Picks.findOne({"pick": pick - 1});
+      return "Last pick: " + lastPick.user.username + " selected " + lastPick.game.game;
     }
     return "";
   };

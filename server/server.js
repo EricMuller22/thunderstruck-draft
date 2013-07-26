@@ -71,8 +71,7 @@ if (Meteor.isServer) {
       profile: {
         name: "Daniel",
         draftOrder: 1,
-        avatar: "daniel.jpg",
-        initials: "DB"
+        avatar: "daniel.jpg"
       }
     });
     Accounts.createUser({
@@ -81,8 +80,7 @@ if (Meteor.isServer) {
       profile: {
         name: "Ross",
         draftOrder: 2,
-        avatar: "ross.jpg",
-        initials: "RB"
+        avatar: "ross.jpg"
       }
     });
     Accounts.createUser({
@@ -91,8 +89,7 @@ if (Meteor.isServer) {
       profile: {
         name: "Julian",
         draftOrder: 3,
-        avatar: "julian.jpg",
-        initials: "JE"
+        avatar: "julian.jpg"
       }
     });
     Accounts.createUser({
@@ -101,8 +98,7 @@ if (Meteor.isServer) {
       profile: {
         name: "Stuart",
         draftOrder: 4,
-        avatar: "stu.jpg",
-        initials: "SS"
+        avatar: "stu.jpg"
       }
     });
 
@@ -120,7 +116,7 @@ if (Meteor.isServer) {
         draftOrder: user.profile.draftOrder,
         id: user._id,
         avatar: user.profile.avatar,
-        initials: user.profile.initials
+        pick: ""
       });
 
       // Alert users that the draft is Live
@@ -138,9 +134,11 @@ if (Meteor.isServer) {
         draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
         id: user._id,
         avatar: user.profile.avatar,
-        initials: user.profile.initials
+        pick: ""
       });
     });
+
+    Picks.remove({});
   });
 
   Meteor.publish("games", function() {
@@ -149,7 +147,7 @@ if (Meteor.isServer) {
   Meteor.publish("drafters", function() {
     return Drafters.find({}, {sort: {draftOrder: 1}});
   });
-  Meteor.publish("nowDrafting", function() {
-    return {"currentPick": currentPick};
+  Meteor.publish("picks", function() {
+    return Picks.find({});
   });
 }

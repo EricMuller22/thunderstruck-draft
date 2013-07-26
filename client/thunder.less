@@ -93,8 +93,14 @@ body {
   background-color: @light-gray;
 }
 
+.owner {
+  text-align: center;
+}
+
 .game-select {
-  display: none;
+  color: @battle-red;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 @media (max-width: 767px) {
@@ -104,6 +110,10 @@ body {
 
   .logo > img {
     display: none;
+  }
+
+  .game .opponent {
+    text-align: center;
   }
 
   .avatar-small {
