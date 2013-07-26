@@ -119,7 +119,8 @@ if (Meteor.isServer) {
         pick: ""
       });
 
-      // Alert users that the draft is Live
+      // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
+      // Meteor docs on the email package demonstrate sending async from client
       /* Email.send({
         "from": "eric@unexplorednovelty.com",
         "to": user.email,

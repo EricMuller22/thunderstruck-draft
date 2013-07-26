@@ -6,6 +6,7 @@
 preserve-inputs
 accounts-password
 # accounts-facebook
+# email
 accounts-ui
 bootstrap
 less
