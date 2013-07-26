@@ -53,54 +53,59 @@ if (Meteor.isServer) {
       }
     ];
 
-  	Games.remove({});
-  	for (var i = 0; i < games.length; i++) {
-  		Games.insert({
-  			game: games[i].game,
-        month: games[i].month,
-        day: games[i].day,
-        time: games[i].time,
-  			owner: ""
-  		});
-  	}
+    if (Games.find({}).count() === 0) {
+    	// Games.remove({});
+    	for (var i = 0; i < games.length; i++) {
+    		Games.insert({
+          _id: i,
+    			game: games[i].game,
+          month: games[i].month,
+          day: games[i].day,
+          time: games[i].time,
+    			owner: ""
+    		});
+    	}
+    }
 
-    Meteor.users.remove({});
-    Accounts.createUser({
-      email: "daniel@test.com",
-      password: "test",
-      profile: {
-        name: "Daniel",
-        draftOrder: 1,
-        avatar: "daniel.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "ross@test.com",
-      password: "test",
-      profile: {
-        name: "Ross",
-        draftOrder: 2,
-        avatar: "ross.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "julian@test.com",
-      password: "test",
-      profile: {
-        name: "Julian",
-        draftOrder: 3,
-        avatar: "julian.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "stuart@test.com",
-      password: "test",
-      profile: {
-        name: "Stuart",
-        draftOrder: 4,
-        avatar: "stu.jpg"
-      }
-    });
+    if (Meteor.users.find({}).count() === 0) {
+      // Meteor.users.remove({});
+      Accounts.createUser({
+        email: "daniel@test.com",
+        password: "test",
+        profile: {
+          name: "Daniel",
+          draftOrder: 1,
+          avatar: "daniel.jpg"
+        }
+      });
+      Accounts.createUser({
+        email: "ross@test.com",
+        password: "test",
+        profile: {
+          name: "Ross",
+          draftOrder: 2,
+          avatar: "ross.jpg"
+        }
+      });
+      Accounts.createUser({
+        email: "julian@test.com",
+        password: "test",
+        profile: {
+          name: "Julian",
+          draftOrder: 3,
+          avatar: "julian.jpg"
+        }
+      });
+      Accounts.createUser({
+        email: "stuart@test.com",
+        password: "test",
+        profile: {
+          name: "Stuart",
+          draftOrder: 4,
+          avatar: "stu.jpg"
+        }
+      });
+    }
 
     var snakeCount = function() {
       var users = Meteor.users.find({}).count();
@@ -109,35 +114,37 @@ if (Meteor.isServer) {
       return games/users - drafters;
     };
 
-    Drafters.remove({});
-    Meteor.users.find({}, {sort: {draftOrder: 1}}).forEach(function(user) {
-      Drafters.insert({
-        username: user.profile.name,
-        draftOrder: user.profile.draftOrder,
-        id: user._id,
-        avatar: user.profile.avatar,
-        pick: ""
+    // Drafters.remove({});
+    if (Drafters.find({}).count() === 0) {
+      Meteor.users.find({}, {sort: {draftOrder: 1}}).forEach(function(user) {
+        Drafters.insert({
+          username: user.profile.name,
+          draftOrder: user.profile.draftOrder,
+          id: user._id,
+          avatar: user.profile.avatar,
+          pick: ""
+        });
+
+        // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
+        // Meteor docs on the email package demonstrate sending async from client
+        /* Email.send({
+          "from": "eric@unexplorednovelty.com",
+          "to": user.email,
+          "subject": "Thunderstruck Draft is LIVE",
+          "html": '<a href="site-link"<h1>WHATTHEFUCKAREYOUWAITINGFOR?</h1></a>'
+        }); */
       });
 
-      // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
-      // Meteor docs on the email package demonstrate sending async from client
-      /* Email.send({
-        "from": "eric@unexplorednovelty.com",
-        "to": user.email,
-        "subject": "Thunderstruck Draft is LIVE",
-        "html": '<a href="site-link"<h1>WHATTHEFUCKAREYOUWAITINGFOR?</h1></a>'
-      }); */
-    });
-
-    Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
-      Drafters.insert({
-        username: user.profile.name,
-        draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
-        id: user._id,
-        avatar: user.profile.avatar,
-        pick: ""
+      Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
+        Drafters.insert({
+          username: user.profile.name,
+          draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
+          id: user._id,
+          avatar: user.profile.avatar,
+          pick: ""
+        });
       });
-    });
+    }
 
     // Allow previous picks to persist, even after a restart
     // Picks.remove({});
