@@ -129,6 +129,13 @@ if (Meteor.isServer) {
       }); */
     });
 
+    Email.send({
+      "from": "eric@unexplorednovelty.com",
+      "to": "ericmuller22@gmail.com",
+      "subject": "Thunderstruck Draft is LIVE",
+      "html": '<a href="http://thunderstruck-draft.herokuapp.com"<h4>WHATTHEFUCKAREYOUWAITINGFOR?</h4></a>'
+    });
+
     Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
       Drafters.insert({
         username: user.profile.name,
