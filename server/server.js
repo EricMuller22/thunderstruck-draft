@@ -53,16 +53,18 @@ if (Meteor.isServer) {
       }
     ];
 
-  	Games.remove({});
-  	for (var i = 0; i < games.length; i++) {
-  		Games.insert({
-  			game: games[i].game,
-        month: games[i].month,
-        day: games[i].day,
-        time: games[i].time,
-  			owner: ""
-  		});
-  	}
+    if (Games.find({}).count() === 0) {
+    	// Games.remove({});
+    	for (var i = 0; i < games.length; i++) {
+    		Games.insert({
+    			game: games[i].game,
+          month: games[i].month,
+          day: games[i].day,
+          time: games[i].time,
+    			owner: ""
+    		});
+    	}
+    }
 
     var users = [
       {
@@ -100,62 +102,63 @@ if (Meteor.isServer) {
       return randomPick;
     }
 
-    Meteor.users.remove({});
-    _.map(users,
-      function(user) {
-        Accounts.createUser({
-          email: user.email,
-          password: user.password,
-          profile: {
-            name: user.name,
-            avatar: user.avatar,
-            draftOrder: randomDraftSpot()
-          }
+    // Meteor.users.remove({});
+    if (Meteor.users.find({}).count() === 0) {
+      _.map(
+        users,
+        function(user) {
+          Accounts.createUser({
+            email: user.email,
+            password: user.password,
+            profile: {
+              name: user.name,
+              avatar: user.avatar,
+              draftOrder: randomDraftSpot()
+            }
+          });
+
+          // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
+          // Meteor docs on the email package demonstrate sending async from client
+          Email.send({
+            "from": "eric@unexplorednovelty.com",
+            "to": user.email,
+            "subject": "Thunderstruck Draft is LIVE",
+            "html":
+              '<p>Username</p>' +
+              '<p>' + user.email + '</p>' +
+              '<p>Password<p>' +
+              '<p>' + user.password + '</p>' + 
+              '<a href="http://thunderstruck-draft.meteor.com">WHATTHEFUCKAREYOUWAITINGFOR?</a>'
+          });
+        }
+      );
+    }
+
+    // Drafters.remove({});
+    if (Drafters.find({}).count() === 0) {
+      Meteor.users.find({}, {sort: {draftOrder: 1}}).forEach(function(user) {
+        Drafters.insert({
+          username: user.profile.name,
+          draftOrder: user.profile.draftOrder,
+          id: user._id,
+          avatar: user.profile.avatar,
+          pick: ""
         });
+      });
 
-        // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
-        // Meteor docs on the email package demonstrate sending async from client
-        Email.send({
-          "from": "eric@unexplorednovelty.com",
-          "to": user.email,
-          "subject": "Thunderstruck Draft is LIVE",
-          "html":
-            '<p>Username</p>' +
-            '<p>' + user.email + '</p>' +
-            '<p>Password<p>' +
-            '<p>' + user.password + '</p>' + 
-            '<a href="http://thunderstruck-draft.meteor.com">WHATTHEFUCKAREYOUWAITINGFOR?</a>'
+      Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
+        Drafters.insert({
+          username: user.profile.name,
+          draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
+          id: user._id,
+          avatar: user.profile.avatar,
+          pick: ""
         });
       });
+    }
 
-    var snakeCount = function() {
-      var users = Meteor.users.find({}).count();
-      var games = Games.find({}).count();
-      var drafters = Drafters.find({}).count();
-      return games/users - drafters;
-    };
-
-    Drafters.remove({});
-    Meteor.users.find({}, {sort: {draftOrder: 1}}).forEach(function(user) {
-      Drafters.insert({
-        username: user.profile.name,
-        draftOrder: user.profile.draftOrder,
-        id: user._id,
-        avatar: user.profile.avatar,
-        pick: ""
-      });
-    });
-    Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
-      Drafters.insert({
-        username: user.profile.name,
-        draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
-        id: user._id,
-        avatar: user.profile.avatar,
-        pick: ""
-      });
-    });
-
-    Picks.remove({});
+    // Allow previous picks to persist, even after a restart
+    // Picks.remove({});
   });
 
   Meteor.publish("games", function() {

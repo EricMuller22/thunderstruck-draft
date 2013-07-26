@@ -77,7 +77,7 @@ body {
 }
 
 .announce {
-  text-align: center;
+  padding-left: 10px;
   color: @battle-red;
   border-radius: 10px;
   background-color: @light-gray;
@@ -113,19 +113,11 @@ body {
 }
 
 @media (max-width: 767px) {
-  #date, #time {
-    display: none;
-  }
-
   .logo > img {
     display: none;
   }
 
-  .game .opponent {
-    text-align: center;
-  }
-
-  .avatar-small {
-    .rounded(@mobile-avatar-size);
+  .game, .opponent, .date, .time, .owner {
+    text-align: left;
   }
 }
