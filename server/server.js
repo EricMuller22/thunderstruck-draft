@@ -139,7 +139,8 @@ if (Meteor.isServer) {
       });
     });
 
-    Picks.remove({});
+    // Allow previous picks to persist, even after a restart
+    // Picks.remove({});
   });
 
   Meteor.publish("games", function() {
