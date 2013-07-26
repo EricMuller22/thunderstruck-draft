@@ -113,19 +113,11 @@ body {
 }
 
 @media (max-width: 767px) {
-  #date, #time {
-    display: none;
-  }
-
   .logo > img {
     display: none;
   }
 
-  .game .opponent {
-    text-align: center;
-  }
-
-  .avatar-small {
-    .rounded(@mobile-avatar-size);
+  .game, .opponent, .date, .time, .owner {
+    text-align: left;
   }
 }
