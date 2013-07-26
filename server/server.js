@@ -64,43 +64,69 @@ if (Meteor.isServer) {
   		});
   	}
 
+    var users = [
+      {
+        email: 'daniel@test.com',
+        password: 'test',
+        name: 'Daniel',
+        avatar: 'daniel.jpg'
+      },
+      {
+        email: 'ross@test.com',
+        password: 'test',
+        name: 'Ross',
+        avatar: 'ross.jpg'
+      },
+      {
+        email: 'stuart@test.com',
+        password: 'test',
+        name: 'Stuart',
+        avatar: 'stu.jpg'
+      },
+      {
+        email: 'julian@test.com',
+        password: 'test',
+        name: 'Julian',
+        avatar: 'julian.jpg'
+      }
+    ];
+
+    var randomDraftSpot = function() {
+      function random() { return Math.floor(Math.random() * 4) + 1; }
+      var randomPick = random();
+      while (Meteor.users.find({'profile.draftOrder': randomPick}).count() !== 0) {
+        randomPick = random();
+      }
+      return randomPick;
+    }
+
     Meteor.users.remove({});
-    Accounts.createUser({
-      email: "daniel@test.com",
-      password: "test",
-      profile: {
-        name: "Daniel",
-        draftOrder: 1,
-        avatar: "daniel.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "ross@test.com",
-      password: "test",
-      profile: {
-        name: "Ross",
-        draftOrder: 2,
-        avatar: "ross.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "julian@test.com",
-      password: "test",
-      profile: {
-        name: "Julian",
-        draftOrder: 3,
-        avatar: "julian.jpg"
-      }
-    });
-    Accounts.createUser({
-      email: "stuart@test.com",
-      password: "test",
-      profile: {
-        name: "Stuart",
-        draftOrder: 4,
-        avatar: "stu.jpg"
-      }
-    });
+    _.map(users,
+      function(user) {
+        Accounts.createUser({
+          email: user.email,
+          password: user.password,
+          profile: {
+            name: user.name,
+            avatar: user.avatar,
+            draftOrder: randomDraftSpot()
+          }
+        });
+
+        // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
+        // Meteor docs on the email package demonstrate sending async from client
+        Email.send({
+          "from": "eric@unexplorednovelty.com",
+          "to": user.email,
+          "subject": "Thunderstruck Draft is LIVE",
+          "html":
+            '<p>Username</p>' +
+            '<p>' + user.email + '</p>' +
+            '<p>Password<p>' +
+            '<p>' + user.password + '</p>' + 
+            '<a href="http://thunderstruck-draft.meteor.com">WHATTHEFUCKAREYOUWAITINGFOR?</a>'
+        });
+      });
 
     var snakeCount = function() {
       var users = Meteor.users.find({}).count();
@@ -118,24 +144,7 @@ if (Meteor.isServer) {
         avatar: user.profile.avatar,
         pick: ""
       });
-
-      // Alert users that the draft is Live - requires email package and a configured $MAIL_URL
-      // Meteor docs on the email package demonstrate sending async from client
-      /* Email.send({
-        "from": "eric@unexplorednovelty.com",
-        "to": user.email,
-        "subject": "Thunderstruck Draft is LIVE",
-        "html": '<a href="site-link"<h1>WHATTHEFUCKAREYOUWAITINGFOR?</h1></a>'
-      }); */
     });
-
-    Email.send({
-      "from": "eric@unexplorednovelty.com",
-      "to": "ericmuller22@gmail.com",
-      "subject": "Thunderstruck Draft is LIVE",
-      "html": '<a href="http://thunderstruck-draft.herokuapp.com"<h4>WHATTHEFUCKAREYOUWAITINGFOR?</h4></a>'
-    });
-
     Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
       Drafters.insert({
         username: user.profile.name,
@@ -157,5 +166,20 @@ if (Meteor.isServer) {
   });
   Meteor.publish("picks", function() {
     return Picks.find({});
+  });
+
+  // Allow async email send from client
+  Meteor.methods({
+    sendGroupEmail: function (subject, html) {
+      this.unblock();
+      Meteor.users.find({}).forEach( function(user) {
+        Email.send({
+          to: user.emails[0].address,
+          from: "eric@unexplorednovelty.com",
+          subject: subject,
+          html: html
+        });
+      });
+    }
   });
 }

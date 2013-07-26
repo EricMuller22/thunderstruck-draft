@@ -12,6 +12,20 @@ if (Meteor.isClient) {
     return Meteor.userId() === nextUser().id;
   };
 
+  var pickEmail = function(username, game, nextUsername) {
+    return '<p><b>' + username + '</b> selected the <b>' + game + '</b></p>' + 
+      '<p>Next up: <b>' + nextUsername + '</b></p>' +
+      '<p><a href="http://thunderstruck-draft.meteor.com">Get back into the fray</a></p>';
+  };
+
+  var summaryEmail = function() {
+    var summary = '';
+    Picks.find({}, {$sort: {pick: 1}}).forEach( function(pick) {
+      summary = summary + '<p>' + pick.pick + '. ' + pick.user.username + ' - ' + pick.game.game + '</p>';
+    });
+    return summary;
+  }
+
   Template.games.canDraft = canDraft;
 
   Template.games.events({
@@ -26,6 +40,20 @@ if (Meteor.isClient) {
         });
         var gameInfo = Games.findOne({_id: evt.target.id});
         Drafters.update({_id: drafterInfo._id}, {$set: {pick: gameInfo.game}});
+        if (currentPick() <= maxPick()) {
+          // send pick e-mail from server (async)
+          Meteor.call('sendGroupEmail',
+            'Thunderstruck - Pick #' + drafterInfo.draftOrder,
+            pickEmail(drafterInfo.username, gameInfo.game, nextUser().username)
+          );
+        }
+        else {
+          // send summary e-mail from server (async)
+          Meteor.call('sendGroupEmail',
+            'Thunderstruck Draft Summary',
+            summaryEmail()
+          );
+        }
       }
     }
   });
