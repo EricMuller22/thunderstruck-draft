@@ -3,7 +3,7 @@
 @light-gray: #F0F0F0;
 @dark-gray: #B0B0B0;
 
-@avatar-size: 36px;
+@avatar-size: 28px;
 @mobile-avatar-size: 22px;
 @border-size: 4px;
 
@@ -42,7 +42,7 @@ body {
 
 .avatar-small {
   .rounded;
-  // .bordered(@midnight-blue, @avatar-size);
+  .bordered(@midnight-blue, @avatar-size);
   // image
   background-size: @avatar-size auto;
   background-position: center top;
@@ -56,6 +56,7 @@ body {
 /* Now Drafting indicator */
 .users li.drafting {
   color: @battle-red;
+  font-weight: bold;
 }
 
 .users li.drafting .avatar-small {
