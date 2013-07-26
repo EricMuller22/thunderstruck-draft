@@ -31,14 +31,13 @@ if (Meteor.isClient) {
   }
 
   Template.users.drafters = function() {
-    return Drafters.find({}).fetch();
+    return Drafters.find({}, {sort: {draftOrder: 1}}).fetch();
   };
 
-  /* For highlighting drafter in user list
-  Template.users.isDrafting = function(drafter) {
+  /* To do: highlight drafter in user list - probably better accomplished with jQuery */
+  Template.users.isDrafting = function() {
     return false;
   };
-  */
 
   var username = function() {
     if (Drafters.findOne({draftOrder: currentPick()})) {
@@ -70,7 +69,7 @@ if (Meteor.isClient) {
   Template.announce.lastPick = function () {
     var pick = currentPick();
     if (pick > 1 && pick <= maxPick()) {
-      return "Last pick: Dude selected Jaguars";
+      return "Last pick: Daniel selected Jaguars";
     }
     return "";
   };

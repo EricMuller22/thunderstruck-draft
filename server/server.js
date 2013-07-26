@@ -66,31 +66,61 @@ if (Meteor.isServer) {
 
     Meteor.users.remove({});
     Accounts.createUser({
-      email: "bro@test.com",
+      email: "daniel@test.com",
       password: "test",
       profile: {
-        name: "Bro",
+        name: "Daniel",
         draftOrder: 1,
-        avatar: "stache.jpg"
+        avatar: "daniel.jpg",
+        initials: "DB"
       }
     });
     Accounts.createUser({
-      email: "dude@test.com",
+      email: "ross@test.com",
       password: "test",
       profile: {
-        name: "Dude",
+        name: "Ross",
         draftOrder: 2,
-        avatar: "eric.jpg"
+        avatar: "ross.jpg",
+        initials: "RB"
+      }
+    });
+    Accounts.createUser({
+      email: "julian@test.com",
+      password: "test",
+      profile: {
+        name: "Julian",
+        draftOrder: 3,
+        avatar: "julian.jpg",
+        initials: "JE"
+      }
+    });
+    Accounts.createUser({
+      email: "stuart@test.com",
+      password: "test",
+      profile: {
+        name: "Stuart",
+        draftOrder: 4,
+        avatar: "stu.jpg",
+        initials: "SS"
       }
     });
 
+    var snakeCount = function() {
+      var users = Meteor.users.find({}).count();
+      var games = Games.find({}).count();
+      var drafters = Drafters.find({}).count();
+      return games/users - drafters;
+    };
+
     Drafters.remove({});
-    Meteor.users.find({}).forEach(function(user) {
+    Meteor.users.find({}, {sort: {draftOrder: 1}}).forEach(function(user) {
       Drafters.insert({
         username: user.profile.name,
         draftOrder: user.profile.draftOrder,
         id: user._id,
-        avatar: user.profile.avatar
+        avatar: user.profile.avatar,
+        initials: user.profile.initials
       });
 
       // Alert users that the draft is Live
@@ -100,6 +130,16 @@ if (Meteor.isServer) {
         "subject": "Thunderstruck Draft is LIVE",
         "html": '<a href="site-link"<h1>WHATTHEFUCKAREYOUWAITINGFOR?</h1></a>'
       }); */
+    });
+
+    Meteor.users.find({}, {sort: {draftOrder: -1}}).forEach(function(user) {
+      Drafters.insert({
+        username: user.profile.name,
+        draftOrder: Meteor.users.find({}).count() * 2 - user.profile.draftOrder + 1,
+        id: user._id,
+        avatar: user.profile.avatar,
+        initials: user.profile.initials
+      });
     });
   });
 

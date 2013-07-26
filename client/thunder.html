@@ -2,7 +2,7 @@
   <meta charset="utf-8">
   <title>Thunderstruck Ticket Draft 2013</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -33,11 +33,12 @@
       <div class="span3" id="time">
         {{time}}
       </div>
-      <div class="span5 opponent">
+      <div class="offset1 span4 opponent">
         {{game}}
       </div>
-      <div class="span2 owner">
+      <div class="span2 owner" id="{{_id}}">
         {{owner}}
+        <!-- button class="btn btn-danger" type="button">Select Game</button -->
       </div>
     </div>
   {{/each}}
@@ -48,7 +49,7 @@
   {{> drafting}}
   <ol>
     {{#each drafters}}
-      <li {{#if isDrafting}}class="drafting"{{/if}}>{{username}} <span style="background-image: url('{{avatar}}');" class="avatar-small"></span></li>
+      <li {{#if isDrafting}}class="drafting"{{/if}}><span style="background-image: url('{{avatar}}');" class="avatar-small"></span> {{username}}</li>
     {{/each}}
   </ol>
 </template>
