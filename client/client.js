@@ -53,14 +53,21 @@ if (Meteor.isClient) {
     if (pickNumber === currentPick()) {
       return 'class=drafting';
     }
+    else if (pickNumber < currentPick()) {
+      return 'class=drafted';
+    }
     return "";
   };
 
   Template.users.image = function(avatar, pick) {
+    var imgUrl;
     if (pick !== "") {
-      return "teams/" + pick + ".gif";
+      imgUrl = "teams/" + pick + ".gif";
     }
-    return avatar;
+    else {
+      imgUrl = avatar;
+    }
+    return imgUrl;
   }
 
   var username = function() {
