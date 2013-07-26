@@ -57,7 +57,6 @@ if (Meteor.isServer) {
     	// Games.remove({});
     	for (var i = 0; i < games.length; i++) {
     		Games.insert({
-          _id: i,
     			game: games[i].game,
           month: games[i].month,
           day: games[i].day,
